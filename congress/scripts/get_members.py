@@ -19,6 +19,7 @@ def get_bio(pid):
     #print name[0], name[0].split(",")
     if len(name) == 0:
         return 1
+
     last = name[0].split(",")[0].strip().title()
     first = name[0].split(",")[1].strip().split(" ")[0]
     if len(name[0].split(",")[1].strip().split(" ")) > 1:
@@ -40,8 +41,6 @@ def get_bio(pid):
     conn.commit()
     return 0
 
-#http://bioguide.congress.gov/biosearch/biosearch1.asp
-
 def get_congress(cong):
     params = urllib.urlencode({'congress': cong})
     results = urllib.urlopen('http://bioguide.congress.gov/biosearch/biosearch1.asp', params)
@@ -49,10 +48,12 @@ def get_congress(cong):
     nas = 1
     for member in page.xpath("//table")[1].xpath("tr")[1:]:
         name = member.xpath("td/a/text()")
+        print name
         if len(name) == 0:
             name = ""
-            pid = str(nas)
+            print nas
             nas += 1
+            continue        
         else:
             name = name[0]
             pid = member.xpath("td/a/@href")[0].split("=")[1]
@@ -95,8 +96,9 @@ c.execute('''
         CONSTRAINT "unq" UNIQUE (pid, congress))'''
     )
 
-for cong in range(2, 114):
-    get_congress(cong)
+def get_all_sessions():
+    for cong in range(1, 114):
+        get_congress(cong)
 
 def get_all_bios():
     for asc in range(65, 91):
@@ -107,6 +109,31 @@ def get_all_bios():
             misses += get_bio(pid)
             if misses > 10:
                 break
+
+def find_dupes():
+    for bio in c.execute("SELECT * FROM bios").fetchall():
+        name = re.search("\(See (.*?)\)", bio["bio"])
+        if name:
+            name = name.group(1)
+            last = name.split(",")[0].strip().title().replace(".", "")
+            first = name.split(",")[1].strip().split(" ")[0].replace(".", "")
+            if len(name.split(",")[1].strip().split(" ")) > 1:
+                middle = name.split(",")[1].strip().split(" ")[1].replace(".", "")
+            else:
+                middle = ""
+            nickname = re.search("\(([A-z]+)\)", name)
+            if nickname:
+                nickname = nickname.group(1)
+            else:
+                nickname = ""
+            print last, first, middle, nickname
+            m = c.execute('''SELECT * from bios WHERE last=? and first=? and middle=?''' , (last, first, middle)).fetchone()
+            if m != []:
+                print m
+                #c.execute("UPDATE bios SET alternate = '%s', altname = '%s' WHERE pid = '%s'" % (bio['pid'], name, m['pid']))
+                #c.execute("DELETE FROM bios WHERE pid = '%s'" % bio['pid'])
+                #conn.commit()
+            
 
 conn.commit()
 conn.close()
