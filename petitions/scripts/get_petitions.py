@@ -124,10 +124,10 @@ SEARCH TWITTER FOR PETITIONS NOT YET ON WH site
 import oauth2 as oauth       
 
 #Register a Twitter app to get credentials: https://dev.twitter.com/apps/new
-CONSUMER_KEY = "gUuCyW6gXQjJYyQuJaIofg"
-CONSUMER_SECRET = "4kKrkGjigTXKDOgd0MkmaW7m403Y17TsqW6LvapxjdA"
-ACCESS_TOKEN = "15741451-9u4QH2KYwsl9kI1j63fxzIYwDPmkDZrtHkMKJ105I"
-ACCESS_TOKEN_SECRET = "HTSt62bLZEH7DoZz8tFopj2p5NL69qbf62iru48U"
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
+ACCESS_TOKEN = ""
+ACCESS_TOKEN_SECRET = ""
 
 # Create your consumer with the proper key/secret.
 consumer = oauth.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
@@ -155,6 +155,6 @@ def search_twitter(url="http://search.twitter.com/search.json?q=whitehouse%20pet
 
 #get_petitions()
 #search_twitter()
-get_signatures()
+#get_signatures()
 
 conn.close()
