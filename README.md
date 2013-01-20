@@ -1,10 +1,11 @@
-A collection of suboptimal Python scripts for crawling government websites.
+A collection of Python scripts for crawling government websites.
 
-PETITIONS
---get_petitions.py
-crawls petitions.whitehouse.gov
+petitions
+=========
+This codebase is now maintained at the [United States GitHub project](https://github.com/unitedstates/petitions).
 
-NOMINATIONS
+nominations
+=========
 --collect.py
 collects nominations from THOMAS leglislative site into SQLite db
 --analyze.py
